@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {PostRequest} from './POST';
-import GET from './GET';
+import Get from './GET';
 
 const StartPage = () => {
     const {request} = PostRequest();
@@ -20,7 +20,7 @@ const StartPage = () => {
                     +
                 </button>
             </div>
-            <GET />
+            <Get />
         </div>
     );
 };

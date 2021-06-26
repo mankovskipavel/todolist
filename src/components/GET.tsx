@@ -1,21 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import {DelateRequest} from './DELETE';
-function MyComponent() {
+import React, {useState, useEffect /* useCallback */} from 'react';
+import delReq from './DELETE';
+// import {PathhCompletedRequest} from './pathCompletedReq';
+function Get() {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
-    function hendlerDelate(id: string) {
-        const delReq = DelateRequest();
-        console.log(id);
+    const hendlerDelete = (id: string) => {
         delReq(id);
-        // const url = 'http://localhost:7000/' + id;
-        // console.log(url);
-        // fetch(url, {method: 'POST'});
-    }
+    };
+    // const handlerChangeCompleted = (id: string, completeValue) => {
+    //     console.log(completeValue);
+    //     const {pathCompletedReq} = PathhCompletedRequest();
+    //     pathCompletedReq(id, completeValue);
+    // };
 
-    // Примечание: пустой массив зависимостей [] означает, что
-    // этот useEffect будет запущен один раз
-    // аналогично componentDidMount()
+    //console.log(items);
     useEffect(() => {
         fetch('http://localhost:7000/')
             .then((res) => res.json())
@@ -31,8 +30,10 @@ function MyComponent() {
                     setError(error);
                 },
             );
-    }, []);
+    }),
+        [];
 
+    //console.log(items);
     if (error) {
         return <div>Ошибка: {error.message}</div>;
     } else if (!isLoaded) {
@@ -48,6 +49,14 @@ function MyComponent() {
                                     type="checkbox"
                                     name={item._id}
                                     checked={item.completed}
+                                    onClick={
+                                        () => console.log('click')
+                                        /* (e) => console.log(e.currentTarget) */
+                                        /*        handlerChangeCompleted(
+                                            e.currentTarget.dataset.name,
+                                            e.currentTarget.checked,
+                                        ) */
+                                    }
                                 />
                                 <p>{item.message}</p>
                             </div>
@@ -59,7 +68,7 @@ function MyComponent() {
                                     className="btn btn-list btn-list-delete"
                                     data-id={item._id}
                                     onClick={(e) =>
-                                        hendlerDelate(
+                                        hendlerDelete(
                                             e.currentTarget.dataset.id,
                                         )
                                     }>
@@ -74,4 +83,4 @@ function MyComponent() {
     }
 }
 
-export default MyComponent;
+export default Get;

@@ -1,3 +1,11 @@
+li {
+    list-style-type: none; /* Убираем маркеры */
+}
+ul {
+    margin-left: 0; /* Отступ слева в браузере IE и Opera */
+    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+}
+
 body {
     margin: 0px;
     margin-top: 100px;
@@ -18,7 +26,7 @@ body {
     width: 400px;
     background-color: aqua;
     margin: 0 auto;
-    padding: 10px;    
+    padding: 10px;
 }
 .inputTask {
     height: 30px;
@@ -32,9 +40,37 @@ body {
     margin-left: 20px;
 }
 
-.container{
+.container {
     width: 500px;
     height: 1000px;
     background-color: yellow;
     margin: 0 auto;
+}
+
+.list {
+    width: 400px;
+    margin: 0 auto;
+}
+.list-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 400px;
+    
+}
+.list__input-wrapper-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+}
+.list__btn-wrapper-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.btn-list-update{
+    margin-right: 10px;
 }

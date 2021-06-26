@@ -1,9 +1,9 @@
 li {
-    list-style-type: none; /* Убираем маркеры */
+    list-style-type: none; 
 }
 ul {
-    margin-left: 0; /* Отступ слева в браузере IE и Opera */
-    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+    margin-left: 0; 
+    padding-left: 0; 
 }
 
 body {
@@ -22,28 +22,36 @@ body {
     background-color: red;
 }
 .addToDo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     height: 40px;
     width: 400px;
-    background-color: aqua;
+    background-color: lightgrey;
     margin: 0 auto;
     padding: 10px;
 }
-.inputTask {
-    height: 30px;
+.task-input {
+    height: 25px;
     width: 200px;
-    margin: auto 20px;
+    margin-left: 40px;
+    border-radius: 10px;
 }
 .btn_addTask {
     height: 30px;
-    width: 50px;
-    background-color: green;
+    width: 100px;
+    background-color: lightblue;
     margin-left: 20px;
+    border-radius: 10px;
 }
-
+.list-wrapper{
+    background-color: lightgrey;
+}
 .container {
     width: 500px;
-    height: 1000px;
-    background-color: yellow;
+    height: 450px;
+    background-color: lightgrey;
     margin: 0 auto;
 }
 
@@ -72,5 +80,24 @@ body {
     align-items: center;
 }
 .btn-list-update{
+    margin-right: 10px;
+}
+.inputTask{
+    height: 30px;
+    width: 200px;
+    margin: auto 20px;
+    background-color: lightgrey;
+    border: lightgrey;
+}
+input:focus, .input:focus{
+    outline: none;
+}
+
+.arrow-container{
+    margin: 0 auto;
+    width: 100px;
+    
+}
+.arrow-left{
     margin-right: 10px;
 }

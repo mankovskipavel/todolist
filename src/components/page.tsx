@@ -15,7 +15,7 @@ const StartPage = () => {
     return (
         <div className="container">
             <div className="addToDo">
-                <input type="text" className="inputTask" ref={inputRef} />
+                <input type="text" className="task-input" ref={inputRef} />
                 <button onClick={hanlderAdd} className="btn btn_addTask">
                     +
                 </button>

@@ -5,7 +5,7 @@ function MyComponent() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
     const mybody: BodyInit = JSON.stringify({
-        message: 'task 22',
+        message: 'task 2200',
         completed: false,
     });
     const header: HeadersInit = {

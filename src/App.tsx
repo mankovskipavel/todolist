@@ -3,7 +3,9 @@ import React from 'react';
 import './styles.scss';
 
 // import ComponentWithUseState from './components/ComponentWithUseState';
-import MyComponent from './components/testPOST';
+// import MyComponent from './components/testPOST';
+import StartPage from './components/page';
+
 /*
 const App: React.FC = () => (
     <div className="wrapper">
@@ -27,7 +29,8 @@ function App() {
     return (
         <div>
             {/*  {<ComponentWithUseState />} */}
-            {<MyComponent />}
+            {/* {<MyComponent />} */}
+            {<StartPage />}
             {/* <ControlledFormWithUseRef /> */}
             {/* <ComponentWithUseEffect /> */}
             {/* <ComponentWithCustomHook /> */}

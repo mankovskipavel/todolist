@@ -1,15 +1,14 @@
 import React from 'react';
 
 import './styles.scss';
-
-import StartPage from './components/page';
+import List from './components/list';
+import InputTask from './components/inputTask';
 
 function App() {
     return (
-        <div>
-            {/*  {<ComponentWithUseState />} */}
-            {/* {<MyComponent />} */}
-            {<StartPage />}
+        <div className="container">
+            <InputTask />
+            <List />
         </div>
     );
 }

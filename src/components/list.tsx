@@ -1,48 +1,97 @@
-import React, {useState, useEffect} from 'react';
-//import delReq from './DELETE';
-// import length from './length';
-//import pathCompletedReq from './patchCompleted';
-//import pathTaskReq from './patchTask';
+import React, {useState, useEffect, useRef} from 'react';
+//import StartPage from './inputTask';
+//import length from './length';
 
 import {useHTTP} from './HTTP';
 
 function Get() {
+    const [page, setPage] = useState(1);
     const {request} = useHTTP();
     const left = '<';
     const right = '>';
+    const limit = 10;
+    const [leftAvailable, setLeftAvailable] = useState(true);
+    const [rightAvailable, setRightAvailable] = useState(true);
+    const [len, setLen] = useState(0);
+    //   const [limit,setLimit] = useState(10);
+    const [action, setAction] = useState(true);
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
+    const inputRef = useRef(null);
 
-    const hendlerDelete = async (id: string) => {
-        await request('http://localhost:7000/' + id, 'DELETE');
+    useEffect(() => {
+        request('http://localhost:7000/len', 'GET')
+            .then((res) => res.json())
+            .then((data) => setLen(data.length));
+        if (len > limit) {
+            setRightAvailable(false);
+        }
+    }, [action, len, request]);
+
+    const handleRight = () => {
+        setPage(page + 1);
+        // setLeftAvailable(false);
+        // console.log('len', len);
+        // console.log('page', page);
+        // console.log('okrug', Math.ceil(len / limit));
+        if (page < 2) {
+            setLeftAvailable(false);
+        }
+        if (Math.ceil(len / limit) <= page + 1) {
+            setRightAvailable(true);
+        }
+    };
+
+    const handleLeft = () => {
+        setPage(page - 1);
+        console.log(page);
+        if (page - 1 == 1) {
+            setLeftAvailable(true);
+        }
+        if (Math.floor(len / limit) < page) {
+            setRightAvailable(false);
+        }
+    };
+    const hendlerDelete = (id: string) => {
+        request('http://localhost:7000/' + id, 'DELETE');
+        setAction(!action);
     };
 
     const handlerChangeCompleted = async (
         id: string,
         completeValue: boolean,
     ) => {
+        setAction(!action);
         await request('http://localhost:7000/' + id, 'PATCH', {
             completed: completeValue,
         });
     };
 
-    const handlerTaskUpdate = async (id: string, task: string) => {
-        await request('http://localhost:7000/' + id, 'PATCH', {message: task});
+    const handlerTaskUpdate = async (id, task) => {
+        setAction(!action);
+        console.log(inputRef.current);
+        await request('http://localhost:7000/' + id, 'PATCH', {
+            message: task,
+        });
     };
 
-    useEffect(() => {
-        request('http://localhost:7000/').then(
-            (result) => {
-                setIsLoaded(true);
-                setItems(result);
-            },
-            (error) => {
-                setIsLoaded(true);
-                setError(error);
-            },
-        );
-    });
+    const reciveData = () => {
+        request('http://localhost:7000/' + '?page=' + page + '&limit=10')
+            .then((res) => res.json())
+            .then(
+                (result) => {
+                    setIsLoaded(true);
+                    setItems(result);
+                },
+                (error) => {
+                    setIsLoaded(true);
+                    setError(error);
+                },
+            );
+    };
+
+    useEffect(reciveData, [action, page, request]);
 
     if (error) {
         return <div>Ошибка: {error.message}</div>;
@@ -60,6 +109,7 @@ function Get() {
                                         type="checkbox"
                                         name={item._id}
                                         checked={item.completed}
+                                        ref={inputRef}
                                         onChange={(e) =>
                                             handlerChangeCompleted(
                                                 e.currentTarget.name,
@@ -71,7 +121,10 @@ function Get() {
                                         className="inputTask"
                                         type="text"
                                         name={item._id}
+                                        /* defaultValue={item.message} */
+                                        /*  readOnly={readOnly} */
                                         value={item.message}
+                                        /* ref={inputRef} */
                                         onChange={(e) =>
                                             handlerTaskUpdate(
                                                 e.currentTarget.name,
@@ -81,7 +134,9 @@ function Get() {
                                     />
                                 </div>
                                 <div className="list__btn-wrapper-container">
-                                    {/*                                     <button className="btn btn-list btn-list-update">
+                                    {/*                                     <button
+                                        className="btn btn-list btn-list-update"
+                                   >
                                         UP
                                     </button> */}
                                     <button
@@ -100,8 +155,18 @@ function Get() {
                     ))}
                 </ul>
                 <div className="arrow-container">
-                    <button className="arrow arrow-left">{left}</button>
-                    <button className="arrow arrow-right">{right}</button>
+                    <button
+                        className="arrow arrow-left"
+                        onClick={handleLeft}
+                        disabled={leftAvailable}>
+                        {left}
+                    </button>
+                    <button
+                        className="arrow arrow-right"
+                        onClick={handleRight}
+                        disabled={rightAvailable}>
+                        {right}
+                    </button>
                 </div>
             </div>
         );

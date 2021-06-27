@@ -20,15 +20,15 @@ export const useHTTP = () => {
             });
             //await fetch(req);
             const response = await fetch(req);
-            const data = await response.json();
+            // const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Что-то пошло не так');
-            }
+            // if (!response.ok) {
+            //     throw new Error(data.message || 'Что-то пошло не так');
+            // }
 
             setLoading(false);
 
-            return data;
+            return response;
         } catch (e) {
             setLoading(false);
             setError(e.message);

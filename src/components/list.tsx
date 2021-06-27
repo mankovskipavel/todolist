@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useRef} from 'react';
-//import StartPage from './inputTask';
-//import length from './length';
+import React, {useState, useEffect} from 'react';
+
+const url = 'https://dry-waters-58905.herokuapp.com/';
 
 import {useHTTP} from './HTTP';
 
@@ -13,15 +13,14 @@ function Get() {
     const [leftAvailable, setLeftAvailable] = useState(true);
     const [rightAvailable, setRightAvailable] = useState(true);
     const [len, setLen] = useState(0);
-    //   const [limit,setLimit] = useState(10);
     const [action, setAction] = useState(true);
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
-    const inputRef = useRef(null);
+    const [chengedTask, setchengedTaskId] = useState({_id: '', message: ''});
 
     useEffect(() => {
-        request('http://localhost:7000/len', 'GET')
+        request(url + 'len', 'GET')
             .then((res) => res.json())
             .then((data) => setLen(data.length));
         if (len > limit) {
@@ -31,10 +30,6 @@ function Get() {
 
     const handleRight = () => {
         setPage(page + 1);
-        // setLeftAvailable(false);
-        // console.log('len', len);
-        // console.log('page', page);
-        // console.log('okrug', Math.ceil(len / limit));
         if (page < 2) {
             setLeftAvailable(false);
         }
@@ -45,7 +40,6 @@ function Get() {
 
     const handleLeft = () => {
         setPage(page - 1);
-        console.log(page);
         if (page - 1 == 1) {
             setLeftAvailable(true);
         }
@@ -54,7 +48,7 @@ function Get() {
         }
     };
     const hendlerDelete = (id: string) => {
-        request('http://localhost:7000/' + id, 'DELETE');
+        request(url + id, 'DELETE');
         setAction(!action);
     };
 
@@ -62,22 +56,25 @@ function Get() {
         id: string,
         completeValue: boolean,
     ) => {
-        setAction(!action);
-        await request('http://localhost:7000/' + id, 'PATCH', {
+        await request(url + id, 'PATCH', {
             completed: completeValue,
         });
-    };
-
-    const handlerTaskUpdate = async (id, task) => {
         setAction(!action);
-        console.log(inputRef.current);
-        await request('http://localhost:7000/' + id, 'PATCH', {
-            message: task,
-        });
     };
 
+    const handlerTaskUpdate = async (id: string) => {
+        if (chengedTask._id == id) {
+            await request(url + chengedTask._id, 'PATCH', {
+                message: chengedTask.message,
+            });
+        }
+    };
+
+    const hadleChange = (id, value) => {
+        setchengedTaskId({_id: id, message: value});
+    };
     const reciveData = () => {
-        request('http://localhost:7000/' + '?page=' + page + '&limit=10')
+        request(url + '?page=' + page + '&limit=10')
             .then((res) => res.json())
             .then(
                 (result) => {
@@ -109,7 +106,6 @@ function Get() {
                                         type="checkbox"
                                         name={item._id}
                                         checked={item.completed}
-                                        ref={inputRef}
                                         onChange={(e) =>
                                             handlerChangeCompleted(
                                                 e.currentTarget.name,
@@ -119,14 +115,10 @@ function Get() {
                                     />
                                     <input
                                         className="inputTask"
-                                        type="text"
                                         name={item._id}
-                                        /* defaultValue={item.message} */
-                                        /*  readOnly={readOnly} */
-                                        value={item.message}
-                                        /* ref={inputRef} */
+                                        defaultValue={item.message}
                                         onChange={(e) =>
-                                            handlerTaskUpdate(
+                                            hadleChange(
                                                 e.currentTarget.name,
                                                 e.currentTarget.value,
                                             )
@@ -134,11 +126,16 @@ function Get() {
                                     />
                                 </div>
                                 <div className="list__btn-wrapper-container">
-                                    {/*                                     <button
+                                    <button
                                         className="btn btn-list btn-list-update"
-                                   >
+                                        name={item._id}
+                                        onClick={(e) =>
+                                            handlerTaskUpdate(
+                                                e.currentTarget.name,
+                                            )
+                                        }>
                                         UP
-                                    </button> */}
+                                    </button>
                                     <button
                                         className="btn btn-list btn-list-delete"
                                         data-id={item._id}

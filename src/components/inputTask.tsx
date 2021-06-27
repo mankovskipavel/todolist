@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 
 import {useHTTP} from './HTTP';
+const url = 'https://dry-waters-58905.herokuapp.com/';
 const InputTask = () => {
     const {request} = useHTTP();
 
@@ -8,8 +9,7 @@ const InputTask = () => {
     const handlerAdd = () => {
         try {
             if (inputRef.current.value !== '') {
-                console.log('add');
-                request('http://localhost:7000/', 'POST', {
+                request(url, 'POST', {
                     message: inputRef.current.value,
                     completed: false,
                 });

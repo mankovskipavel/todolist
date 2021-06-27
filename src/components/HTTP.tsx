@@ -12,12 +12,18 @@ export const useHTTP = () => {
             }
             const header: HeadersInit = {
                 'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
             };
             const req = new Request(url, {
                 method,
                 headers: header,
                 body,
+                /*  mode: 'no-cors', */
             });
+            // req.mode = 'no-cors';
+            console.log(req.mode);
+            //req.setMode('no-cors');
             //await fetch(req);
             const response = await fetch(req);
             // const data = await response.json();

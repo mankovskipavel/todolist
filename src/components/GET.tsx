@@ -1,48 +1,48 @@
 import React, {useState, useEffect} from 'react';
-import delReq from './DELETE';
-import length from './length';
-import pathCompletedReq from './patchCompleted';
-import pathTaskReq from './patchTask';
+//import delReq from './DELETE';
+// import length from './length';
+//import pathCompletedReq from './patchCompleted';
+//import pathTaskReq from './patchTask';
+
+import {useHTTP} from './HTTP';
+
 function Get() {
+    const {request} = useHTTP();
     const left = '<';
     const right = '>';
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
-    // const [query, setQuery] = useState('');
-    // setQuery('?page=1&limit=10');
 
-    //const [len, setLen] = useState(0);
-    const len = length();
-    //setLen(length());
-    console.log(len);
-    //setLen(items.length);
-    // console.log(len, query);
-    const hendlerDelete = (id: string) => {
-        delReq(id);
-    };
-    const handlerChangeCompleted = (id: string, completeValue: boolean) => {
-        pathCompletedReq(id, completeValue);
+    const hendlerDelete = async (id: string) => {
+        await request('http://localhost:7000/' + id, 'DELETE');
     };
 
-    const handlerTaskCompleted = (id: string, task: string) => {
-        pathTaskReq(id, task);
+    const handlerChangeCompleted = async (
+        id: string,
+        completeValue: boolean,
+    ) => {
+        await request('http://localhost:7000/' + id, 'PATCH', {
+            completed: completeValue,
+        });
+    };
+
+    const handlerTaskUpdate = async (id: string, task: string) => {
+        await request('http://localhost:7000/' + id, 'PATCH', {message: task});
     };
 
     useEffect(() => {
-        fetch('http://localhost:7000/' + '?page=1&limit=10')
-            .then((res) => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
-                    setItems(result);
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                },
-            );
-    }, []);
+        request('http://localhost:7000/').then(
+            (result) => {
+                setIsLoaded(true);
+                setItems(result);
+            },
+            (error) => {
+                setIsLoaded(true);
+                setError(error);
+            },
+        );
+    });
 
     if (error) {
         return <div>Ошибка: {error.message}</div>;
@@ -73,7 +73,7 @@ function Get() {
                                         name={item._id}
                                         value={item.message}
                                         onChange={(e) =>
-                                            handlerTaskCompleted(
+                                            handlerTaskUpdate(
                                                 e.currentTarget.name,
                                                 e.currentTarget.value,
                                             )
@@ -81,9 +81,9 @@ function Get() {
                                     />
                                 </div>
                                 <div className="list__btn-wrapper-container">
-                                    <button className="btn btn-list btn-list-update">
+                                    {/*                                     <button className="btn btn-list btn-list-update">
                                         UP
-                                    </button>
+                                    </button> */}
                                     <button
                                         className="btn btn-list btn-list-delete"
                                         data-id={item._id}

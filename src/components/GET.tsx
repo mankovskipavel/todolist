@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import delReq from './DELETE';
-
+import length from './length';
 import pathCompletedReq from './patchCompleted';
 import pathTaskReq from './patchTask';
 function Get() {
@@ -13,6 +13,9 @@ function Get() {
     // setQuery('?page=1&limit=10');
 
     //const [len, setLen] = useState(0);
+    const len = length();
+    //setLen(length());
+    console.log(len);
     //setLen(items.length);
     // console.log(len, query);
     const hendlerDelete = (id: string) => {
@@ -39,8 +42,7 @@ function Get() {
                     setError(error);
                 },
             );
-    }),
-        [];
+    }, []);
 
     if (error) {
         return <div>Ошибка: {error.message}</div>;
